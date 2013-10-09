@@ -1,4 +1,5 @@
 #
+#
 # This is an autoincluded module for ActionController::Base
 # 
 # It will store the controller context for the given request in a
@@ -12,16 +13,25 @@
 # application.
 #
 module ActiveComponent
-  @@controller = {}
+  @@controllers = {}
 
   class << self
+
+    def controllers
+      if Rails.env.test?
+        @@controllers
+      else
+        puts "WARNING: ActiveComponent#controllers cannot be accessible from outside of the class"
+      end
+    end
+
     def get_controller
-      @@controller[Thread.current.object_id]
+      @@controllers[Thread.current.object_id]
     end
 
     def set_controller(controller)
-      @@controller[Thread.current.object_id] = controller
-      ObjectSpace.define_finalizer Thread.current, -> (id){ @@controller[id].delete! }
+      @@controllers[Thread.current.object_id] = controller
+      ObjectSpace.define_finalizer Thread.current, lambda { |id| @@controllers[id].delete! }
     end
   end
 

@@ -13,6 +13,7 @@ module ActiveComponent
     # the rails conventions, especially with the asset pipeline.
     #
     include ActionView::Helpers::DateHelper
+    include ActiveComponent::Renderable
     #
     # Whenever the user creates a new object from a class inherited
     # from ActiveComponent::Base it needs to define its attributes as
@@ -34,22 +35,26 @@ module ActiveComponent
     # self.controller from anywhere in the inherited classes.
     #
     def initialize(args = {})
+      assign_variables args
+      @controller = ActiveComponent.get_controller
+    end
+
+    def assign_variables(args)
       if args.kind_of? Hash
-        assign_variables args
-        @controller = ActiveComponent.get_controller rescue nil
+        args.each do |key, value|
+          self.send("#{key}=", value)
+        end
       else
         raise ArgumentError, "Expected: Hash. Received: #{args.class.name}"
       end
     end
 
-    def assign_variables(args)
-      args.each do |key, value|
-        self.send("#{key}=", value)
-      end
-    end
-
     def controller
       @controller
+    end
+
+    def render
+      super.html_safe
     end
   end
 end

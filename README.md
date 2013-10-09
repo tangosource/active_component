@@ -1,19 +1,23 @@
 # ActiveComponent
+[![Gem Version](https://badge.fury.io/rb/active-component.png)](http://badge.fury.io/rb/active-component)
+[![Build Status](https://travis-ci.org/TheNaoX/active_component.png?branch=master)](https://travis-ci.org/TheNaoX/active_component)
+[![Code Climate](https://codeclimate.com/github/TheNaoX/active_component.png)](https://codeclimate.com/github/TheNaoX/active_component)
+[![Coverage Status](https://coveralls.io/repos/TheNaoX/active_component/badge.png)](https://coveralls.io/r/TheNaoX/active_component)
 
 A View-Component framework for Rails applications.
 
 ## Usage
 
-Add the gem on your gemfile
+Add the gem to your gemfile
 
 ```ruby
-gem "active_component"
+gem "active-component", :require => "active_component"
 ```
 
 Or install it manually
 
 ```bash
-$ gem install active_component
+$ gem install active-component
 ```
 
 You will have accessible all the modules from the gem in your Rails application.
@@ -47,7 +51,7 @@ end
 
 And in your template:
 
-```mustache
+```html
 <li>
   <a href="mailto:{{ email }}">
     {{ name }}
@@ -59,10 +63,13 @@ And in your template:
 In your rails view
 
 ```erb
-<%= ActivityComponent.new.render.html_safe %>
+<%= render_component(:activity) %>
 ```
 
 ## Features
+
+### Controller context from your component class
+
 
 You can access the controller context from where the component is instanced
 
@@ -78,6 +85,8 @@ class ActivityComponent < ActiveComponent::Base
 end
 ```
 
+### Passing variables
+
 You can pass variables in the object instance
 
 ```ruby
@@ -86,15 +95,34 @@ class ActivityComponent < ActiveComponent::Base
 end
 ```
 
-``` erb
-<%= ActivityComponent.new(name: current_user.name) %>
+```erb
+<%= render_component(:activity, :name => current_user.name) %>
 ```
+
+### Collection Rendering
+
+You can render component collections from the view or from another component
+
+```erb
+<%= render_component(:activity, :collection => activities, :as => :activity) %>
+```
+
+And pass local variables
+
+```erb
+<%= render_component(:activity, :collection => activities, :as => :activity, :locals => { :foo => "foo" }) %>
+```
+
+Where the `:collection` is an array of elements (database records, hashes, stings, etc), and the `:as` is the name of the instance attribute defined in your component class.
+
+NOTICE In order to use the collection feature you have to define with `attr_accessor` the name of the attribute to be received by the component class.
 
 ## Future short term features
 
-* A nicer method to call the component `render_component(:activity)`.
+* Test helpers, (rspec, minitest)
+* Sinatra version of this gem (active_component_core gem, and active_comoponent_sinatra)
 * Support for more templating engines.
 
-Inspired by [Cells](https://github.com/apotonick/cells) framework done by [Apotonick](https://github.com/apotonick).
+Inspired from [Cells](https://github.com/apotonick/cells) framework done by [Apotonick](https://github.com/apotonick).
 
 This project rocks and uses [MIT-LICENSE](https://github.com/TheNaoX/active_component/blob/master/MIT-LICENSE).
