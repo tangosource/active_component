@@ -1,5 +1,3 @@
-require 'active_support/concern'
-
 # 
 # This provides a clean implementation for rendering your template
 # inside your view.
@@ -21,7 +19,7 @@ module ActiveComponent
       raise_errors(type, args) if type.nil? or args.nil?
 
       unless args[:collection].present?
-        template(type, args)
+        element(type, args)
       else
         collection(type, args[:collection], args[:as], args[:locals])
       end
@@ -29,7 +27,7 @@ module ActiveComponent
 
     private
 
-    def template(type, args)
+    def element(type, args)
       resource = constantize("#{type.to_s}_component").new(args)
       resource.render
     end
@@ -42,7 +40,7 @@ module ActiveComponent
       locals = locals || {}
 
       html_string = collection.map do |item|
-        template(
+        element(
           type,
           locals.merge(as => item)
         )
@@ -64,4 +62,4 @@ module ActiveComponent
   end
 end
 
-ActionView::Base.send(:include, ActiveComponent::Renderable)
+ActionView::Base.send(:include, ActiveComponent::Renderable) if defined?(ActionView)

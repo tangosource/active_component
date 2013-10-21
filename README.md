@@ -1,5 +1,6 @@
 # ActiveComponent
 [![Gem Version](https://badge.fury.io/rb/active-component.png)](http://badge.fury.io/rb/active-component)
+[![Dependency Status](https://gemnasium.com/TheNaoX/active_component.png)](https://gemnasium.com/TheNaoX/active_component)
 [![Build Status](https://travis-ci.org/TheNaoX/active_component.png?branch=master)](https://travis-ci.org/TheNaoX/active_component)
 [![Code Climate](https://codeclimate.com/github/TheNaoX/active_component.png)](https://codeclimate.com/github/TheNaoX/active_component)
 [![Coverage Status](https://coveralls.io/repos/TheNaoX/active_component/badge.png)](https://coveralls.io/r/TheNaoX/active_component)
@@ -117,10 +118,27 @@ Where the `:collection` is an array of elements (database records, hashes, sting
 
 NOTICE In order to use the collection feature you have to define with `attr_accessor` the name of the attribute to be received by the component class.
 
+## Sinatra
+
+You can add this gem to sinatra, with the following configuration in your app
+
+```ruby
+require 'active_component'
+
+class App < Sinatra::Base
+
+  helpers ActiveComponent::Base
+
+  get '/' do
+    render_component(:activity)
+  end
+
+end
+```
+
 ## Future short term features
 
 * Test helpers, (rspec, minitest)
-* Sinatra version of this gem (active_component_core gem, and active_comoponent_sinatra)
 * Support for more templating engines.
 
 Inspired from [Cells](https://github.com/apotonick/cells) framework done by [Apotonick](https://github.com/apotonick).
